@@ -22,11 +22,11 @@ const add = async (req, res, next) => {
 
 const deleteById = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await contacts.removeContact(contactId);
+  await contacts.removeContact(contactId);
   if (!contactId) {
     throw HttpError(404, "Not found");
   }
-  res.json(result);
+  res.status(200).json({ message: "contact deleted" });
 };
 
 const updateById = async (req, res, next) => {
