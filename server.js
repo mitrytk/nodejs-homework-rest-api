@@ -1,8 +1,7 @@
 const mongoost = require("mongoose");
 
 const app = require("./app");
-const DB_HOST =
-  "mongodb+srv://Dmitry:QSyYUNNKd%402E9qg@cluster0.x8vtve9.mongodb.net/contacts_reader";
+const { DB_HOST } = process.env;
 
 mongoost
   .connect(DB_HOST)
@@ -15,5 +14,3 @@ mongoost
     console.log(error.message);
     process.exit(1);
   });
-
-// QSyYUNNKd@2E9qg
