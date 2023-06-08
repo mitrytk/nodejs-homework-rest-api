@@ -33,7 +33,7 @@ const register = async (req, res) => {
   await User.findByIdAndUpdate(newUser._id, { token });
 
   const subscription = newUser.subscription || "starter";
-  res.json({
+  res.status(201).json({
     token,
     user: {
       email: newUser.email,
@@ -59,7 +59,6 @@ const login = async (req, res) => {
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
-
   res.json({
     token,
     user: {
@@ -87,18 +86,10 @@ const logout = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
-  const { path: tempUpload, originalname } = req.file;
-  const fileFormat = originalname.slice(
-    originalname.indexOf("."),
-    originalname.lenght
-  );
-  if (fileFormat !== ".png" && fileFormat !== ".jpg") {
-    throw HttpError(400, "Invalid image format (use JPG/PNG)");
-  }
-  const fileName = _id + fileFormat;
-  const resultUpload = path.join(avatarsDir, fileName);
+  const { path: tempUpload, filename } = req.file;
+  const resultUpload = path.join(avatarsDir, filename);
   await fs.rename(tempUpload, resultUpload);
-  const avatarURL = path.join("avatars", fileName);
+  const avatarURL = path.join("avatars", filename);
   await User.findByIdAndUpdate(_id, { avatarURL });
 
   res.json({
